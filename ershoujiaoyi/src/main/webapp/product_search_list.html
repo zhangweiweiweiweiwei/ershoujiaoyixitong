@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="二手交易">
+    <meta name="description" content="">
+    <title>轻工大二手交易系统-商品列表</title>
+
+    <link href="/plugins/zui/css/zui.css" rel="stylesheet">
+    <link href="/plugins/zui/css/zui-theme.css" rel="stylesheet">
+    <link href="/css/my.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="/plugins/zui/lib/ieonly/html5shiv.js"></script>
+    <script src="/plugins/zui/lib/ieonly/respond.js"></script>
+    <script src="/plugins/zui/lib/ieonly/excanvas.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+<div id="top"></div>
+
+
+<!-- 商品列表 -->
+<div class="wrapper" style="min-height: 500px">
+    <!-- 面包屑导航 -->
+    <ol class="breadcrumb">
+        <li>
+            <span class="breadcrumb-title">当前位置：</span>
+            <a href="/main">产品列表</a>
+        </li>
+        <li class="active">产品列表</li>
+    </ol>
+
+    <!-- 列表开始 -->
+    <div class="list">
+        <section class="cards cards-borderless cards-products row" id="list">
+
+        </section>
+
+        <div class="clearfix"
+             style="padding: 0 12px; border-top: 1px dotted #e5e5e5;">
+
+                <ul class="pager pull-right" style="margin:0;" id="pageNav"></ul>
+
+            <!--分页-->
+<!--            <div class='pull-right' style='height:32px;line-height:32px;margin-right:8px;'>共<strong id="totalSize">24</strong>件商品,共<srong id="totalPage">3</srong>页,<strong id="currentPage">1</strong>页</div>-->
+
+        </div>
+    </div>
+    <!-- /列表结束 -->
+</div>
+<!-- /商品列表 -->
+
+
+<div id="bottom"></div>
+
+<script src="/plugins/zui/lib/jquery/jquery.js"></script>
+<script src="/js/jquery.scrollUp.min.js"></script>
+<script src="/plugins/zui/js/zui.js"></script>
+<script src="/js/include.js"></script>
+<script src="/js/my.js"></script>
+
+<script>
+
+    $(function(){
+        //页面加载完后，获取由top.html传过来的cate_id
+        var search=window.location.search;//该方法设置或返回从问号 (?) 开始的 URL（查询部分）
+
+        //console.log(search)
+        var keyword=search.split("=")[1];//按照"="号拆分search数组，【0】获取"="号前，【1】获取"="号后，
+        <!-- 将分类商品信息填充 -->
+        //页面加载完后，分页显示第一页的数据
+        load(keyword)
+    })
+
+    function load(keyword){
+        $.ajax({
+            url:"/product/search",
+            data:{"keyword":keyword},
+            type:"get",
+            success:function(data){
+                var pageinfo = data.data;
+                //console.log(pageinfo)
+                //显示分页的商品信息开始
+                var contentHtml="";
+                for(var i=0; i<pageinfo.length; i++){
+                    var product= data.data[i];
+                    //console.log(product)
+                    /*
+                    data.list.size()错误，在JavaScript中没有集合的概念只有数组
+                    pageinfo自动集成封装里含有list集合，主要见product-list页面的pagehelper分页功能
+                    而此处第二个data是product类型的对象list集合成为数组，只可以使用length
+                    */
+                    contentHtml+='            <div class="col-xs-2">\n' +
+                        '                <div class="card">\n' +
+                        '                    <a href="/product_detail.html?id='+product.id+'" target="_blank">\n' +
+                        '                        <img src="/img/'+product.thumbnail+'" alt="" />\n' +
+                        '                    </a>\n' +
+                        '                    <div class="card-heading">\n' +
+                        '                        <span class="pull-right price">￥'+product.price+'</span>\n' +
+                        '                        <a href="/product_detail.html?id='+product.id+'" target="_blank">'+product.name+'</a>\n' +
+                        '                    </div>\n' +
+                        '                </div>\n' +
+                        '            </div>';
+                }
+                $("#list").html(contentHtml);
+                //显示分页的商品信息结束
+
+
+                //显示分页条开始
+               /* $("#totalSize").html(pageinfo.total);
+                $("#totalPage").html(pageinfo.pages);
+                $("#currentPage").html(pageinfo.pageNum);
+
+
+                var start;
+                var end;
+                if(pageinfo.pages<=10){
+                    start=1;
+                    end=pageinfo.pages;
+                }else{
+                    start=pageinfo.pageNum-5;
+                    end=pageinfo.pageNum+4;
+
+                    if(start<1){
+                        start=1;
+                        end=10;
+                    }
+
+                    if(end>pageinfo.pages){
+                        end=pageinfo.pages;
+                        start=end-9;
+                    }
+                }
+
+                var pageHTML=""
+                pageHTML+='<li onclick="load('+cate_id+','+1+','+pageSize+')"><a href="javascript:void(0)">首页</a></li>';
+                if(pageinfo.pageNum>1){
+                    pageHTML+='<li onclick="load('+cate_id+','+(pageinfo.pageNum-1)+','+pageSize+')"><a href="javascript:void(0)">上一页</a></li>';
+                }
+
+                for(var i=start; i<=end;i++){
+                    if(i==pageinfo.pageNum){  //设置高亮
+                        pageHTML+=' <li class="active" onclick="load('+cate_id+','+i+','+pageSize+')"><a href="javascript:void(0)">'+i+'</a></li>';
+                    }else{
+                        pageHTML+=' <li onclick="load('+cate_id+','+i+','+pageSize+')"><a href="javascript:void(0)">'+i+'</a></li>';
+                    }
+
+                }
+                if(pageinfo.pageNum<pageinfo.pages){
+                    pageHTML+='<li onclick="load('+cate_id+','+(pageinfo.pageNum+1)+','+pageSize+')"><a href="javascript:void(0)">下一页</a></li>';
+                }
+                pageHTML+='<li onclick="load('+cate_id+','+(pageinfo.pages)+','+pageSize+')"><a href="javascript:void(0)">末页</a></li>';
+                $("#pageNav").html(pageHTML);*/
+
+                //显示分页结束
+
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

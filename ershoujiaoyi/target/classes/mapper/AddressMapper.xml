@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--已完成-->
+<mapper namespace="com.whpu.dao.AddressDao">
+<!--根据memberId查询所有收货地址-->
+    <select id="findByMemberId" resultType="com.whpu.pojo.Address">
+        select * from address where mbr_id=#{memberId}
+    </select>
+
+<!--order_confirm.html页面添加收货地址-->
+    <insert id="addAddress" parameterType="com.whpu.pojo.Address">
+        insert into address (contact,mobile,street,zipcode,mbr_id,default_value) values(#{contact},#{mobile},#{street},#{zipcode},#{mbr_id},#{default_value})
+    </insert>
+
+<!--更新默认地址-->
+    <update id="updataDefaultValue" parameterType="int">
+        update address set default_value=0 where mbr_id=#{memberid}
+    </update>
+
+<!--根据id查看订单的地址（收货地址）-->
+    <select id="findById" resultType="com.whpu.pojo.Address" >
+        select * from address where id=#{memberId}
+    </select>
+
+</mapper>

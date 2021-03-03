@@ -1,0 +1,12 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--未完成-->
+<mapper namespace="com.whpu.dao.OrderDao">
+<!--    添加订单功能，对应order_confirm.html页面-->
+    <insert id="add" parameterType="com.whpu.pojo.Orders">
+        insert into orders (number,buyer_id,total_amount,total_price,payment_price,remark,contact,mobile,street,zipcode,create_time,payment_time,delivery_time,end_time,status) values(#{number},#{buyer_id},#{total_amount},#{total_price},#{payment_price},#{remark},#{contact},#{mobile},#{street},#{zipcode},#{create_time},#{payment_time},#{delivery_time},#{end_time},#{status})
+    </insert>
+
+</mapper>

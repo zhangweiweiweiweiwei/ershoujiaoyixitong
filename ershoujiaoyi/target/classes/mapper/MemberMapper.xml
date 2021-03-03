@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--已完成-->
+<mapper namespace="com.whpu.dao.MemberDao">
+<!--该语句为判断用户传入的登录账号（电话）和密码是否正确  对应member_login.html页面-->
+    <select id="findByMobileAndPwd" resultType="com.whpu.pojo.Member">
+        select * from member where mobile=#{mobile} and pwd=#{pwd}
+    </select>
+
+<!--注册时判断当前账号和密码是否已存在 对应member_register.html页面-->
+    <select id="findByMobile" resultType="com.whpu.pojo.Member">
+        select * from member where mobile=#{mobile}
+    </select>
+
+
+    <insert id="add" parameterType="com.whpu.pojo.Member">
+        insert into member (mobile,pwd) values(#{mobile},#{pwd})
+    </insert>
+</mapper>

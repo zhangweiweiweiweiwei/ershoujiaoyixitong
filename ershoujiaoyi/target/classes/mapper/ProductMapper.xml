@@ -1,0 +1,25 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--未完成-->
+<mapper namespace="com.whpu.dao.ProductDao">
+<!--    根据product表的id查询product表，获取所有信息详情 对应product_detail.html页面以及order_confirm.html页面-->
+    <select id="findById" resultType="com.whpu.pojo.Product">
+        select * from product where id=#{id}
+    </select>
+
+<!--    商品分页-->
+    <select id="findByPage" resultType="com.whpu.pojo.Product">
+        select * from product where cate_id=#{cateid}
+    </select>
+
+    <select id="findTotalCount" resultType="Long">
+        select count(*) from product where cate_id=#{cateid}
+    </select>
+
+
+    <select id="findByName"  resultType="com.whpu.pojo.Product" parameterType="String" >
+        select * from product where name like '%${name}%'
+    </select>
+</mapper>
